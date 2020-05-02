@@ -37,6 +37,21 @@ class Shortcode
     }
 
     /**
+     * Register a new shortcode
+     *
+     * @param  string          $name
+     * @param  callable|string $callback
+     *
+     * @return \Webwizo\Shortcodes\Shortcode
+     */
+    public function registerSnippet($name, $content)
+    {
+        $this->compiler->addSnippet($name, $content);
+
+        return $this;
+    }
+
+    /**
      * Enable the laravel-shortcodes
      *
      * @return \Webwizo\Shortcodes\Shortcode

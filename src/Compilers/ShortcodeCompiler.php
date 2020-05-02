@@ -1,6 +1,7 @@
 <?php namespace Webwizo\Shortcodes\Compilers;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class ShortcodeCompiler
 {
@@ -30,6 +31,7 @@ class ShortcodeCompiler
      * @var array
      */
     protected $registered = [];
+    protected $registeredSnippet = [];
 
     /**
      * Attached View Data
@@ -68,7 +70,14 @@ class ShortcodeCompiler
      */
     public function add($name, $callback)
     {
+        Log::info('callback: '.$callback);
+
         $this->registered[$name] = $callback;
+    }
+
+    public function addSnippet($name, $content)
+    {
+        $this->registeredSnippet[$name] = $content;
     }
 
     public function attachData($data)
@@ -108,7 +117,7 @@ class ShortcodeCompiler
      */
     public function hasShortcodes()
     {
-        return !empty($this->registered);
+        return !empty($this->registered) || !empty($this->registeredSnippet);
     }
 
     /**
@@ -139,6 +148,9 @@ class ShortcodeCompiler
     {
         $pattern = $this->getRegex();
 
+        Log::info('pattern: '.$pattern);
+        Log::info('renderShortcodes: '.$value);
+
         return preg_replace_callback("/{$pattern}/s", [$this, 'render'], $value);
     }
     
@@ -163,6 +175,9 @@ class ShortcodeCompiler
         $name = $compiled->getName();
         $viewData = $this->_viewData;
 
+        if (array_key_exists($name, $this->registeredSnippet))
+            return $this->registeredSnippet[$name];
+        
         // Render the shortcode through the callback
         return call_user_func_array($this->getCallback($name), [
             $compiled,
@@ -309,7 +324,7 @@ class ShortcodeCompiler
      */
     protected function getShortcodeNames()
     {
-        return join('|', array_map('preg_quote', array_keys($this->registered)));
+        return join('|', array_map('preg_quote', array_keys(array_merge($this->registeredSnippet,$this->registered))));
     }
 
     /**
@@ -321,6 +336,8 @@ class ShortcodeCompiler
     protected function getRegex()
     {
         $shortcodeNames = $this->getShortcodeNames();
+
+        Log::info('shortcodeNames: '.$shortcodeNames);
 
         return "\\[(\\[?)($shortcodeNames)(?![\\w-])([^\\]\\/]*(?:\\/(?!\\])[^\\]\\/]*)*?)(?:(\\/)\\]|\\](?:([^\\[]*+(?:\\[(?!\\/\\2\\])[^\\[]*+)*+)\\[\\/\\2\\])?)(\\]?)";
     }
