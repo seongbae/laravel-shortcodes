@@ -1,5 +1,5 @@
 {
-    "name": "webwizo/laravel-shortcodes",
+    "name": "seongbae/laravel-shortcodes",
     "type": "library",
     "description": "Wordpress like shortcodes for Laravel 5, 6, and 7",
     "keywords": [
@@ -7,7 +7,7 @@
         "wordpress",
         "shortcodes"
     ],
-    "homepage": "https://github.com/webwizo/laravel-shortcodes",
+    "homepage": "https://github.com/seongbae/laravel-shortcodes",
     "license": "MIT",
     "authors": [
         {
