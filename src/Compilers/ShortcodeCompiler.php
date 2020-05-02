@@ -332,8 +332,6 @@ class ShortcodeCompiler
     {
         $shortcodeNames = $this->getShortcodeNames();
 
-        Log::info('shortcodeNames: '.$shortcodeNames);
-
         return "\\[(\\[?)($shortcodeNames)(?![\\w-])([^\\]\\/]*(?:\\/(?!\\])[^\\]\\/]*)*?)(?:(\\/)\\]|\\](?:([^\\[]*+(?:\\[(?!\\/\\2\\])[^\\[]*+)*+)\\[\\/\\2\\])?)(\\]?)";
     }
 
