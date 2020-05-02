@@ -70,8 +70,6 @@ class ShortcodeCompiler
      */
     public function add($name, $callback)
     {
-        Log::info('callback: '.$callback);
-
         $this->registered[$name] = $callback;
     }
 
@@ -147,9 +145,6 @@ class ShortcodeCompiler
     protected function renderShortcodes($value)
     {
         $pattern = $this->getRegex();
-
-        Log::info('pattern: '.$pattern);
-        Log::info('renderShortcodes: '.$value);
 
         return preg_replace_callback("/{$pattern}/s", [$this, 'render'], $value);
     }
